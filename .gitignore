@@ -1,0 +1,10 @@
+packages/
+TestingEFCodeFirst.EF/obj/
+TestingEFCodeFirst.Services/obj/
+TestingEFCodeFirst.Services/bin/
+TestingEFCodeFirst.EF/bin/
+TestingEFCodeFirst.Web/bin/
+TestingEFCodeFirst.Web/obj/
+TestingEFCodeFirst/obj/
+TestingEFCodeFirst/bin/
+*.map
