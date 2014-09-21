@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace TestingEFCodeFirst.Data
 {
-    public interface ICustomerDao
+    public interface ICustomerRepository : IDisposable
     {
         IList<Customer> GetList();
         void Save(Customer customer);
