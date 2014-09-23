@@ -20,7 +20,7 @@ namespace TestingEFCodeFirst.Web
                 ContractResolver = new CamelCasePropertyNamesContractResolver()
             };
 
-            UnityConfig.RegisterComponents();
+            //UnityConfig.RegisterComponents();
             WebApiConfig.Register(GlobalConfiguration.Configuration);
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);

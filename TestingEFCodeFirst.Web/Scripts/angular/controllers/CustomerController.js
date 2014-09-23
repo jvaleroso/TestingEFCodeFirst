@@ -6,7 +6,6 @@
                 this.customerService = customerService;
                 this.isLoadingData = true;
                 this.getCustomers();
-                this.isLoadingData = false;
                 this.showUpdateButton = false;
             }
             CustomerController.prototype.logError = function (error) {
@@ -56,6 +55,7 @@
                 var _this = this;
                 this.customerService.getCustomers().then(function (customers) {
                     _this.customers = customers;
+                    _this.isLoadingData = false;
                 }, this.logError);
             };
 

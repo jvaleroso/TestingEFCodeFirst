@@ -1,57 +1,38 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 
 namespace TestingEFCodeFirst.EF
 {
-    public class UnitOfWork<T> : IUnityOfWork<T> where T:class
+    public class UnitOfWork<T> : IUnityOfWork<T> where T : class
     {
         private readonly CustomerDbContext _customerDbContext;
+        private readonly IRepository<T> _repo;
 
-        private readonly ConcurrentDictionary<string, IGenericRepository<T>> _repositories =
-            new ConcurrentDictionary<string, IGenericRepository<T>>();
+        private readonly ConcurrentDictionary<string, IRepository<T>> _repositories =
+            new ConcurrentDictionary<string, IRepository<T>>();
 
-        public UnitOfWork(CustomerDbContext customerDbContext)
+        public UnitOfWork(CustomerDbContext customerDbContext, IRepository<T> repo)
         {
             _customerDbContext = customerDbContext;
+            _repo = repo;
         }
 
-        public IGenericRepository<T> Repository 
+        public IRepository<T> Repository
         {
             get
             {
-                IGenericRepository<T> repo;
-                if (_repositories.TryGetValue(typeof (T).ToString(), out repo)) return repo;
+                IRepository<T> repo;
+                if (_repositories.TryGetValue(typeof(T).ToString(), out repo)) return repo;
 
-                repo = new GenericRepository<T>(_customerDbContext);
-                _repositories.TryAdd(typeof(T).ToString(), repo);
+                _repo.SetDbContext(_customerDbContext);
+                _repositories.TryAdd(typeof(T).ToString(), _repo);
 
-                return repo;
+                return _repo;
             }
         }
-
 
         public void Save()
         {
             _customerDbContext.SaveChanges();
-        }
-
-        private bool _disposed;
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!_disposed)
-            {
-                if (disposing)
-                    _customerDbContext.Dispose();
-            }
-            _disposed = true;
-        }
-
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
         }
     }
 }
