@@ -1,6 +1,8 @@
 ﻿
 
-module MongoAngular.Resource {
+module mongoAngular.Resource {
+
+    import customerModel = mongoAngular.models.Customer;
 
     export class CustomerService {
 
@@ -11,7 +13,7 @@ module MongoAngular.Resource {
             this.customerService = restangular.all('customer');
         }
 
-        saveCustomer(customer: MongoAngular.Model.ICustomer) {
+        saveCustomer(customer: customerModel) {
             return this.customerService.post(customer);
         }
 
@@ -19,7 +21,7 @@ module MongoAngular.Resource {
             return this.customerService.getList();
         }
 
-        getCustomerById(id: string) {
+        getCustomerById(id: string) :restangular.IPromise<customerModel>{
             return this.restangular.one('customer', id).get();
         }
 

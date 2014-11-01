@@ -1,12 +1,22 @@
-﻿var MongoAngular;
-(function (MongoAngular) {
-    (function (Controllers) {
+﻿var mongoAngular;
+(function (mongoAngular) {
+    (function (controllers) {
+        var customerModel = mongoAngular.models.Customer;
+
         var CustomerController = (function () {
             function CustomerController(customerService) {
                 this.customerService = customerService;
-                this.isLoadingData = true;
-                this.getCustomers();
                 this.showUpdateButton = false;
+
+                $("#birthdate").datepicker({
+                    dateFormat: 'dd-M-yy',
+                    changeMonth: true,
+                    changeYear: true
+                });
+
+                this.customer = new customerModel();
+                this.customerList = [];
+                this.getCustomers();
             }
             CustomerController.prototype.logError = function (error) {
                 console.log(error.message);
@@ -19,12 +29,24 @@
             CustomerController.prototype.cancel = function () {
                 this.customer = null;
                 this.showUpdateButton = false;
+                this.birthDate = null;
+            };
+
+            CustomerController.prototype.setBirthDate = function () {
+                var birthday = this.birthDate.split('-');
+                var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+                var mon = months.indexOf(birthday[1]);
+                var day = parseInt(birthday[0]) + 1;
+                var year = parseInt(birthday[2]);
+
+                this.customer.birthDate = new Date(year, mon, day);
             };
 
             CustomerController.prototype.addCustomer = function (customer) {
                 var _this = this;
                 this.customerService.saveCustomer(customer).then(function (c) {
-                    _this.customers.push(c);
+                    _this.customerList.push(c);
                     _this.resetCustomer();
                 }, this.logError);
             };
@@ -35,6 +57,7 @@
                     _this.showUpdateButton = false;
                     _this.resetCustomer();
                     _this.getCustomers();
+                    _this.birthDate = null;
                 }, this.logError);
             };
 
@@ -53,8 +76,10 @@
 
             CustomerController.prototype.getCustomers = function () {
                 var _this = this;
+                this.isLoadingData = true;
+
                 this.customerService.getCustomers().then(function (customers) {
-                    _this.customers = customers;
+                    _this.customerList = customers;
                     _this.isLoadingData = false;
                 }, this.logError);
             };
@@ -64,17 +89,21 @@
                 this.showUpdateButton = true;
                 this.customerService.getCustomerById(id).then(function (c) {
                     _this.customer = c;
+                    var date = new Date(c.birthDate.toString());
+
+                    //this.customer.birthDate = date;
+                    $('#birthdate').datepicker("setDate", date);
                 }, this.logError);
             };
             return CustomerController;
         })();
-        Controllers.CustomerController = CustomerController;
+        controllers.CustomerController = CustomerController;
 
         angular.module('mongoAngular').controller('CustomerController', [
             'CustomerService',
             CustomerController
         ]);
-    })(MongoAngular.Controllers || (MongoAngular.Controllers = {}));
-    var Controllers = MongoAngular.Controllers;
-})(MongoAngular || (MongoAngular = {}));
+    })(mongoAngular.controllers || (mongoAngular.controllers = {}));
+    var controllers = mongoAngular.controllers;
+})(mongoAngular || (mongoAngular = {}));
 //# sourceMappingURL=CustomerController.js.map
