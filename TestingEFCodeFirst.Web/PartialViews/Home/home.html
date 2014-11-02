@@ -58,7 +58,7 @@
                         <span ng-bind="cust.lastName"></span>
                     </td>
                     <td>
-                        <span ng-bind="cust.birthDate"></span>
+                        <span ng-bind="cust.birthDate | date: 'dd-MMM-yyyy'"></span>
                     </td>
                     <td>
                         <span ng-bind="cust.address"></span>

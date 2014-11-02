@@ -8,3 +8,5 @@ TestingEFCodeFirst.Web/obj/
 TestingEFCodeFirst/obj/
 TestingEFCodeFirst/bin/
 *.map
+*.suo
+*.user

@@ -1,4 +1,6 @@
-﻿module mongoAngular.controllers {
+﻿module mongoAngular.Controllers {
+
+    'use strict';
 
     import customerModel = mongoAngular.models.Customer;
     import customerService = mongoAngular.Resource.CustomerService;
@@ -19,18 +21,18 @@
                 changeYear: true
             });
 
-
             this.customer = new customerModel();
             this.customerList = [];
             this.getCustomers();
         }
 
-        private logError(error: Error) {
+        private logError(error: Error): void {
             console.log(error.message);
         }
 
         private resetCustomer(): void {
-            this.customer = null;
+            this.customer = new customerModel();
+            this.birthDate = null;
         }
 
         public cancel(): void {
@@ -39,16 +41,17 @@
             this.birthDate = null;
         }
 
-        public setBirthDate() {
-            var birthday = this.birthDate.split('-');
-            var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        public setBirthDate(): void {
+            var birthday: string[] = this.birthDate.split('-');
+            var months: string[] = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-            var mon = months.indexOf(birthday[1]);
-            var day = parseInt(birthday[0]) + 1;
-            var year = parseInt(birthday[2]);
+            var month: number = months.indexOf(birthday[1]);
+            var date: number = parseInt(birthday[0], 10);
+            var year: number = parseInt(birthday[2], 10);
 
-            this.customer.birthDate = new Date(year, mon, day);
+            this.customer.birthDate = new Date(Date.UTC(year, month, date));
         }
+
 
         public addCustomer(customer: customerModel): void {
             this.customerService.saveCustomer(customer).then((c: customerModel): void => {
@@ -57,13 +60,12 @@
             }, this.logError);
         }
 
-        public updateCustomer(customer) {
+        public updateCustomer(customer: customerModel): void {
 
-            this.customerService.updateCustomer(customer).then(() => {
+            this.customerService.updateCustomer(customer).then((): void => {
                 this.showUpdateButton = false;
                 this.resetCustomer();
                 this.getCustomers();
-                this.birthDate = null;
             }, this.logError);
         }
 
@@ -82,8 +84,7 @@
 
         public getCustomers(): void {
             this.isLoadingData = true;
-
-            this.customerService.getCustomers().then((customers: customerModel[]): void=> {
+            this.customerService.getCustomers().then((customers): void=> {
                 this.customerList = customers;
                 this.isLoadingData = false;
             }, this.logError);
@@ -93,8 +94,7 @@
             this.showUpdateButton = true;
             this.customerService.getCustomerById(id).then((c: customerModel): void => {
                 this.customer = c;
-                var date = new Date(c.birthDate.toString());
-                //this.customer.birthDate = date;
+                var date: Date = new Date(c.birthDate.toString());
                 $('#birthdate').datepicker("setDate", date);
             }, this.logError);
         }

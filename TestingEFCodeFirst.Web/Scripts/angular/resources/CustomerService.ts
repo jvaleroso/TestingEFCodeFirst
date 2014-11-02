@@ -7,29 +7,28 @@ module mongoAngular.Resource {
     export class CustomerService {
 
         private customerService: restangular.IElement;
-        private restangularService: restangular.IService;
 
         constructor(private restangular: restangular.IElement) {
             this.customerService = restangular.all('customer');
         }
 
-        saveCustomer(customer: customerModel) {
+        public saveCustomer(customer: customerModel): restangular.IPromise<customerModel> {
             return this.customerService.post(customer);
         }
 
-        getCustomers() {
+        public getCustomers(): restangular.ICollectionPromise<customerModel> {
             return this.customerService.getList();
         }
 
-        getCustomerById(id: string) :restangular.IPromise<customerModel>{
+        public getCustomerById(id: string): restangular.IPromise<customerModel> {
             return this.restangular.one('customer', id).get();
         }
 
-        removeCustomer(customer) {
+        public removeCustomer(customer) {
             return customer.remove();
         }
 
-        updateCustomer(customer) {
+        public updateCustomer(customer) {
             return customer.put();
         }
     }
