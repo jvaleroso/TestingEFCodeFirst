@@ -36,11 +36,12 @@
             };
 
             CustomerController.prototype.setBirthDate = function () {
+                this.birthDate = $("#birthdate").val();
                 var birthday = this.birthDate.split('-');
                 var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-                var month = months.indexOf(birthday[1]);
                 var date = parseInt(birthday[0], 10);
+                var month = months.indexOf(birthday[1]);
                 var year = parseInt(birthday[2], 10);
 
                 this.customer.birthDate = new Date(Date.UTC(year, month, date));
@@ -68,17 +69,14 @@
                 this.customerService.getCustomerById(id).then(function (c) {
                     _this.customerService.removeCustomer(c).then(function () {
                         _this.getCustomers();
-                    }, function (error) {
-                        console.log(error.message);
-                    });
-                }, function (error) {
-                    console.log(error.message);
-                });
+                    }, _this.logError);
+                }, this.logError);
             };
 
             CustomerController.prototype.getCustomers = function () {
                 var _this = this;
                 this.isLoadingData = true;
+
                 this.customerService.getCustomers().then(function (customers) {
                     _this.customerList = customers;
                     _this.isLoadingData = false;
@@ -92,6 +90,7 @@
                     _this.customer = c;
                     var date = new Date(c.birthDate.toString());
                     $('#birthdate').datepicker("setDate", date);
+                    _this.setBirthDate();
                 }, this.logError);
             };
             return CustomerController;

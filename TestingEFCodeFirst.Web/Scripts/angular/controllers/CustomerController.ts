@@ -42,11 +42,12 @@
         }
 
         public setBirthDate(): void {
+            this.birthDate = $("#birthdate").val();
             var birthday: string[] = this.birthDate.split('-');
             var months: string[] = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-            var month: number = months.indexOf(birthday[1]);
             var date: number = parseInt(birthday[0], 10);
+            var month: number = months.indexOf(birthday[1]);
             var year: number = parseInt(birthday[2], 10);
 
             this.customer.birthDate = new Date(Date.UTC(year, month, date));
@@ -71,20 +72,20 @@
 
         public deleteCustomer(id: string): void {
 
-            this.customerService.getCustomerById(id).then((c: customerModel): void=> {
-                this.customerService.removeCustomer(c).then((): void=> {
-                    this.getCustomers();
-                }, (error: Error): void=> {
-                        console.log(error.message);
-                    });
-            }, (error: Error): void=> {
-                    console.log(error.message);
-                });
+            this.customerService.getCustomerById(id).then(
+                (c: customerModel): void => {
+                    this.customerService.removeCustomer(c).then(
+                        (): void => {
+                            this.getCustomers();
+                        },
+                        this.logError);
+                }, this.logError);
         }
 
         public getCustomers(): void {
             this.isLoadingData = true;
-            this.customerService.getCustomers().then((customers): void=> {
+
+            this.customerService.getCustomers().then((customers: customerModel[]) => {
                 this.customerList = customers;
                 this.isLoadingData = false;
             }, this.logError);
@@ -96,6 +97,7 @@
                 this.customer = c;
                 var date: Date = new Date(c.birthDate.toString());
                 $('#birthdate').datepicker("setDate", date);
+                this.setBirthDate();
             }, this.logError);
         }
     }

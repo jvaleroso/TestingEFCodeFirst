@@ -16,11 +16,11 @@ module mongoAngular.Resource {
             return this.customerService.post(customer);
         }
 
-        public getCustomers(): restangular.ICollectionPromise<customerModel> {
+        public getCustomers() {
             return this.customerService.getList();
         }
 
-        public getCustomerById(id: string): restangular.IPromise<customerModel> {
+        public getCustomerById(id: string) {
             return this.restangular.one('customer', id).get();
         }
 
