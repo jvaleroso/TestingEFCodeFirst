@@ -2,7 +2,7 @@ using System;
 using Microsoft.Practices.Unity;
 using TestingEFCodeFirst.EF;
 
-namespace TestingEFCodeFirst.Web.App_Start
+namespace TestingEFCodeFirst.Web
 {
     /// <summary>
     /// Specifies the Unity configuration for the main container.

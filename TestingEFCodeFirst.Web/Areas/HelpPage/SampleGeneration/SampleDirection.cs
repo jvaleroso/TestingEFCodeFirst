@@ -1,4 +1,4 @@
-namespace TestingEFCodeFirst.Web.Areas.HelpPage
+namespace TestingEFCodeFirst.Web.Areas.HelpPage.SampleGeneration
 {
     /// <summary>
     /// Indicates whether the sample is used for request or response

@@ -42,7 +42,7 @@ namespace TestingEFCodeFirst.Web.Areas.HelpPage.Controllers
                 }
             }
 
-            return View(ErrorViewName);
+            return View("Error");
         }
 
         public ActionResult ResourceModel(string modelName)

@@ -13,6 +13,7 @@ using System.Web.Http.Controllers;
 using System.Web.Http.Description;
 using TestingEFCodeFirst.Web.Areas.HelpPage.ModelDescriptions;
 using TestingEFCodeFirst.Web.Areas.HelpPage.Models;
+using TestingEFCodeFirst.Web.Areas.HelpPage.SampleGeneration;
 
 namespace TestingEFCodeFirst.Web.Areas.HelpPage
 {

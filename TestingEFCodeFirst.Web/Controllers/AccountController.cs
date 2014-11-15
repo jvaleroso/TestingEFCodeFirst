@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
-using System.Web.Http.ModelBinding;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
@@ -85,16 +85,10 @@ namespace TestingEFCodeFirst.Web.Controllers
                 return null;
             }
 
-            List<UserLoginInfoViewModel> logins = new List<UserLoginInfoViewModel>();
-
-            foreach (IdentityUserLogin linkedAccount in user.Logins)
+            var logins = user.Logins.Select(linkedAccount => new UserLoginInfoViewModel
             {
-                logins.Add(new UserLoginInfoViewModel
-                {
-                    LoginProvider = linkedAccount.LoginProvider,
-                    ProviderKey = linkedAccount.ProviderKey
-                });
-            }
+                LoginProvider = linkedAccount.LoginProvider, ProviderKey = linkedAccount.ProviderKey
+            }).ToList();
 
             if (user.PasswordHash != null)
             {
@@ -307,8 +301,7 @@ namespace TestingEFCodeFirst.Web.Controllers
                         provider = description.AuthenticationType,
                         response_type = "token",
                         client_id = Startup.PublicClientId,
-                        redirect_uri = new Uri(Request.RequestUri, returnUrl).AbsoluteUri,
-                        state = state
+                        redirect_uri = new Uri(Request.RequestUri, returnUrl).AbsoluteUri, state
                     }),
                     State = state
                 };
@@ -328,7 +321,7 @@ namespace TestingEFCodeFirst.Web.Controllers
                 return BadRequest(ModelState);
             }
 
-            var user = new ApplicationUser() { UserName = model.Email, Email = model.Email };
+            var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
 
             IdentityResult result = await UserManager.CreateAsync(user, model.Password);
 
@@ -357,7 +350,7 @@ namespace TestingEFCodeFirst.Web.Controllers
                 return InternalServerError();
             }
 
-            var user = new ApplicationUser() { UserName = model.Email, Email = model.Email };
+            var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
 
             IdentityResult result = await UserManager.CreateAsync(user);
             if (!result.Succeeded)
